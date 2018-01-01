@@ -10,7 +10,11 @@ This utilizes the [Domoticz Python Plugin](https://www.domoticz.com/wiki/Develop
 - Fan Mode
 - Heat Setpoint
 - Cool Setpoint
+- Humidifier Setpoint
+- Dehumidifier Setpoint
 - Schedule
 - Away
 - Temperature
 - Humidity
+- System State
+- Fan State

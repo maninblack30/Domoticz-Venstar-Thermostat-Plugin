@@ -320,7 +320,7 @@ class BasePlugin:
             self.VenstarConn.Send({"Verb":"GET", "URL":url, "Headers": headers})
 
         else:
-            Domoticz.Connect()
+            self.VenstarConn.Connect()
 
 global _plugin
 _plugin = BasePlugin()

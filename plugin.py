@@ -17,6 +17,12 @@
             </options>
         </param>
 
+        <param field="Mode3"    label="Create Status Tracking Devices"    width="75px">
+            <options>
+                <option label="Yes"  value="True"/>
+                <option label="No" value="False"  default="true" />
+            </options>
+        </param>
 
         <param field="Mode6"    label="Debug"    width="75px">
             <options>
@@ -63,6 +69,9 @@ class BasePlugin:
     awayUnit = 10
     systemStateUnit = 12
     fanStateUnit = 13
+    heatStatusUnit = 14
+    coolStatusUnit = 15
+    fanStatusUnit = 16
 
 
 
@@ -108,28 +117,31 @@ class BasePlugin:
                   "LevelNames": "Off|Heat|Cool|Auto",
                   "LevelOffHidden": "false",
                   "SelectorStyle": "1"}
-                Domoticz.Device(Name="Mode",  Unit=1, TypeName="Selector Switch", Switchtype=18, Image=16, Options=Options).Create()
+                Domoticz.Device(Name="Mode",  Unit=self.modeUnit, TypeName="Selector Switch", Switchtype=18, Image=16, Options=Options).Create()
             if (self.fanModeUnit not in Devices):
                 #Options = "LevelActions:"+stringToBase64("||||")+";LevelNames:"+stringToBase64("Auto|On")+";LevelOffHidden:ZmFsc2U=;SelectorStyle:MA=="
                 Options = {"LevelActions": "||||",
                   "LevelNames": "Auto|On",
                   "LevelOffHidden": "false",
                   "SelectorStyle": "1"}
-                Domoticz.Device(Name="Fan Mode",  Unit=2, TypeName="Selector Switch", Switchtype=18, Image=7, Options=Options).Create()
-            if (self.heatSetpointUnit not in Devices): Domoticz.Device(Name="Heat Setpoint", Unit=3, Type=242, Subtype=1).Create()
-            if (self.coolSetpointUnit not in Devices): Domoticz.Device(Name="Cool Setpoint", Unit=4, Type=242, Subtype=1, Image=16).Create()
+                Domoticz.Device(Name="Fan Mode",  Unit=self.fanModeUnit, TypeName="Selector Switch", Switchtype=18, Image=7, Options=Options).Create()
+            if (self.heatSetpointUnit not in Devices): Domoticz.Device(Name="Heat Setpoint", Unit=self.heatSetpointUnit, Type=242, Subtype=1).Create()
+            if (self.coolSetpointUnit not in Devices): Domoticz.Device(Name="Cool Setpoint", Unit=self.coolSetpointUnit, Type=242, Subtype=1, Image=16).Create()
             if(Parameters["Mode2"]):
-                if (self.dehumSetpointUnit not in Devices): Domoticz.Device(Name="Dehum Setpoint", Unit=5, Type=244, Subtype=73, Switchtype=7, Image=11).Create()
-                if (self.humSetpointUnit not in Devices): Domoticz.Device(Name="Hum Setpoint", Unit=11, Type=244, Subtype=73, Switchtype=7, Image=11).Create()
-            if (self.tempUnit not in Devices): Domoticz.Device(Name="Temperature", Unit=6, TypeName="Temperature").Create()
-            if (self.tempHumUnit not in Devices): Domoticz.Device(Name="Temp + Humidity", Unit=7, TypeName="Temp+Hum").Create()
-            if (self.humUnit not in Devices): Domoticz.Device(Name="Humidity", Unit=8, TypeName="Humidity").Create()
-            if (self.scheduleUnit not in Devices): Domoticz.Device(Name="Schedule", Unit=9, TypeName="Switch", Image=13).Create()
-            if (self.awayUnit not in Devices): Domoticz.Device(Name="Away Mode", Unit=10, TypeName="Switch").Create()
+                if (self.dehumSetpointUnit not in Devices): Domoticz.Device(Name="Dehum Setpoint", Unit=self.dehumSetpointUnit, Type=244, Subtype=73, Switchtype=7, Image=11).Create()
+                if (self.humSetpointUnit not in Devices): Domoticz.Device(Name="Hum Setpoint", Unit=self.humSetpointUnit, Type=244, Subtype=73, Switchtype=7, Image=11).Create()
+            if (self.tempUnit not in Devices): Domoticz.Device(Name="Temperature", Unit=self.tempUnit, TypeName="Temperature").Create()
+            if (self.tempHumUnit not in Devices): Domoticz.Device(Name="Temp + Humidity", Unit=self.tempHumUnit, TypeName="Temp+Hum").Create()
+            if (self.humUnit not in Devices): Domoticz.Device(Name="Humidity", Unit=self.humUnit, TypeName="Humidity").Create()
+            if (self.scheduleUnit not in Devices): Domoticz.Device(Name="Schedule", Unit=self.scheduleUnit, TypeName="Switch", Image=13).Create()
+            if (self.awayUnit not in Devices): Domoticz.Device(Name="Away Mode", Unit=self.awayUnit, TypeName="Switch").Create()
                 
-            if (self.systemStateUnit not in Devices): Domoticz.Device(Name="System State", Unit=12, Type=17, Switchtype=17, Image=Images['venstar_fan_off'].ID).Create()
-            if (self.fanStateUnit not in Devices): Domoticz.Device(Name="Fan State", Unit=13, Type=17,  Switchtype=17, Image=Images['venstar_fan_off'].ID).Create()
-            #if (14 not in Devices): Domoticz.Device(Name="Temp Units", Unit=14, TypeName="Text").Create()
+            if (self.systemStateUnit not in Devices): Domoticz.Device(Name="System State", Unit=self.systemStateUnit, Type=17, Switchtype=17, Image=Images['venstar_fan_off'].ID).Create()
+            if (self.fanStateUnit not in Devices): Domoticz.Device(Name="Fan State", Unit=self.fanStateUnit, Type=17,  Switchtype=17, Image=Images['venstar_fan_off'].ID).Create()
+            if(Parameters["Mode3"]):
+                if (self.heatStatusUnit not in Devices): Domoticz.Device(Name="Heating Status", Unit=self.heatStatusUnit, TypeName="Custom").Create()
+                if (self.coolStatusUnit not in Devices): Domoticz.Device(Name="Cooling Status", Unit=self.coolStatusUnit, TypeName="Custom").Create()
+                if (self.fanStatusUnit not in Devices): Domoticz.Device(Name="Fan Status", Unit=self.fanStatusUnit, TypeName="Custom").Create()
         else:
             self.isConnected = False
             Domoticz.Log("Failed to connect ("+str(Status)+") to: "+Parameters["Address"])
@@ -147,8 +159,10 @@ class BasePlugin:
             return
 
         data = json.loads(jsonStr) # parse json string to dictionary
-        UpdateDevice(1,0,str(data['mode']*10))
-        UpdateDevice(2,0,str(data['fan']*10))
+        UpdateDevice(self.modeUnit,0,str(data['mode']*10))
+
+        UpdateDevice(self.fanModeUnit,0,str(data['fan']*10))
+
         #calc humidity status
         
         if(data['hum'] < 25):
@@ -163,26 +177,26 @@ class BasePlugin:
 
         if (data['tempunits'] == 0): # If thermostat is in fahrenheit convert to celcius for domoticz
             
-            UpdateDevice(3,0,str((data['heattemp'] -32)*5/9))
-            UpdateDevice(4,0,str((data['cooltemp'] -32)*5/9))
-            UpdateDevice(6,0,str((data['spacetemp']-32)*5/9))
-            UpdateDevice(7,0,str((data['spacetemp']-32)*5/9)+";"+str(data['hum'])+";"+str(humStat))
+            UpdateDevice(self.heatSetpointUnit,0,str((data['heattemp'] -32)*5/9))
+            UpdateDevice(self.coolSetpointUnit,0,str((data['cooltemp'] -32)*5/9))
+            UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9))
+            UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9)+";"+str(data['hum'])+";"+str(humStat))
         else:
             
-            UpdateDevice(3,0,str(data['heattemp']))
-            UpdateDevice(4,0,str(data['cooltemp']))
-            UpdateDevice(6,0,str(data['spacetemp']))
-            UpdateDevice(7,0,str(data['spacetemp'])+";"+str(data['hum'])+";"+str(humStat))
+            UpdateDevice(self.heatSetpointUnit,0,str(data['heattemp']))
+            UpdateDevice(self.coolSetpointUnit,0,str(data['cooltemp']))
+            UpdateDevice(self.tempUnit,0,str(data['spacetemp']))
+            UpdateDevice(self.tempHumUnit,0,str(data['spacetemp'])+";"+str(data['hum'])+";"+str(humStat))
 
 #       if humidity control enabled, get hum set point
         if(Parameters["Mode2"]):            
-           UpdateDevice(11,2,str(data['hum_setpoint']) ) #nValue 2 to show percentage
-           UpdateDevice(5,2,str(data['dehum_setpoint']) ) #nValue 2 to show percentage
+           UpdateDevice(self.humSetpointUnit,2,str(data['hum_setpoint']) ) #nValue 2 to show percentage
+           UpdateDevice(self.dehumSetpointUnit,2,str(data['dehum_setpoint']) ) #nValue 2 to show percentage
                             
         
-        UpdateDevice(8,data['hum'],"0")
-        UpdateDevice(9,data['schedule'],"0")
-        UpdateDevice(10,data['away'],"0")
+        UpdateDevice(self.humUnit,data['hum'],"0")
+        UpdateDevice(self.scheduleUnit,data['schedule'],"0")
+        UpdateDevice(self.awayUnit,data['away'],"0")
         
         systemState = 'Idle'
         systemStateIcon = 'fan_off'
@@ -198,12 +212,27 @@ class BasePlugin:
         elif (data['state'] == 4):
             systemState = 'Error'
 
-        UpdateDevice(12,0,systemState,systemStateIcon) 
+        UpdateDevice(self.systemStateUnit,0,systemState,systemStateIcon) 
+
+        if(Parameters["Mode3"]):
+            heatStatus = "0"
+            coolStatus = "0"
+
+            if(systemState == "Heating"):
+                heatStatus="1"
+            elif(systemState=="Cooling"):
+                coolStatus = "1"
+            
+
+            UpdateDevice(self.heatStatusUnit,0,heatStatus)
+            UpdateDevice(self.coolStatusUnit, 0, coolStatus)
+            UpdateDevice(self.fanStatusUnit, 0, data['fanstate'])
 
         fanState = 'On' if data['fanstate'] == 1 else 'Off'
         fanStateIcon = 'fan_on' if data['fanstate'] == 1 else 'fan_off'
 
-        UpdateDevice(13,0,fanState,fanStateIcon)
+        UpdateDevice(self.fanStateUnit,0,fanState,fanStateIcon)
+        
    
 
 
@@ -211,21 +240,21 @@ class BasePlugin:
         Domoticz.Debug("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(int(Level)))
         Domoticz.Debug("mode:"+str(int(Devices[1].sValue))+", fan:"+str(Devices[2].nValue)+", heattemp:"+str(int(float(Devices[3].sValue)*9/5+32))+", cooltemp:"+str(int(float(Devices[4].sValue)*9/5+32)))
 
-        domoTempUnits = Settings["TempUnit"] #1=Farenheit,0=Celsius
+        domoTempUnits = Settings["TempUnit"] # 1=Farenheit,0=Celsius
 
-        if (Unit == self.modeUnit): # mode
+        if (Unit == self.modeUnit): 
             mode_val = int(Level/10)
             UpdateDevice(Unit,0,Level)
         else:
             mode_val = int(int(Devices[1].sValue)/10)
 
-        if (Unit == self.fanModeUnit): # fan mode
+        if (Unit == self.fanModeUnit): 
             fan_val = int(Level/10)
             UpdateDevice(Unit,0,Level)
         else:
             fan_val = int(int(Devices[2].sValue)/10)
 
-        if (Unit == self.heatSetpointUnit): # heat temp
+        if (Unit == self.heatSetpointUnit): 
             heat_val = int(Level)
             heat_val_to_store = heat_val
             if(domoTempUnits == '1'):
@@ -235,7 +264,7 @@ class BasePlugin:
         else:
             heat_val = int(float(Devices[3].sValue)*9/5+32)
 
-        if (Unit == self.coolSetpointUnit): # cool temp
+        if (Unit == self.coolSetpointUnit): 
             cool_val = int(Level)
             cool_val_to_store = cool_val
             if(domoTempUnits == '1'):
@@ -251,7 +280,7 @@ class BasePlugin:
             self.VenstarConn.Send({'Verb':'POST', 'URL':'/control','Headers':headers, 'Data': str(params)})  
                   
 
-        if (Unit == self.scheduleUnit): # schedule
+        if (Unit == self.scheduleUnit): 
             if (Command == "On"):
                 params = 'schedule=1';
                 UpdateDevice(Unit,1,"0")
@@ -264,7 +293,7 @@ class BasePlugin:
 
             self.VenstarConn.Send({'Verb':'POST', 'URL':'/settings','Headers':headers, 'Data': params})
 
-        if (Unit == self.awayUnit): # away
+        if (Unit == self.awayUnit): 
             if (Command == "On"):
                 params = 'away=1'
                
@@ -277,7 +306,7 @@ class BasePlugin:
 
             self.VenstarConn.Send({'Verb':'POST', 'URL':'/settings','Headers':headers, 'Data': params})
         
-        if(Unit == self.dehumSetpointUnit): #dehum setpoint
+        if(Unit == self.dehumSetpointUnit):
             if(Level >= 25 and Level <= 99):
                 params = 'dehum_setpoint='+str(int(Level))+'&hum_setpoint='+str(int(float(Devices[11].sValue)))
 
@@ -287,7 +316,7 @@ class BasePlugin:
 
                 self.VenstarConn.Send({'Verb':'POST', 'URL':'/settings','Headers':headers, 'Data': params})
 
-        if(Unit == self.humSetpointUnit): #hum setpoint
+        if(Unit == self.humSetpointUnit): 
             if(Level >= 0 and Level <= 60):
                 params = 'hum_setpoint='+str(int(Level))+'&dehum_setpoint='+str(int(float(Devices[5].sValue)))
                 

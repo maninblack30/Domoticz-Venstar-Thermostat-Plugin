@@ -165,14 +165,14 @@ class BasePlugin:
 
         #calc humidity status
         
-        if(data['hum'] < 25):
-            humStat = 2 #dry
-        elif(data['hum'] > 60):
-            humStat = 3 #wet
-        elif(data['hum'] >= 25 and data['hum'] <= 60):
-            humStat = 1 #comfortable
-        else:
-            humStat = 0 #normal
+#       if(data['hum'] < 25):
+#            humStat = 2 #dry
+#        elif(data['hum'] > 60):
+#            humStat = 3 #wet
+#        elif(data['hum'] >= 25 and data['hum'] <= 60):
+#            humStat = 1 #comfortable
+#        else:
+#            humStat = 0 #normal
 
 
         if (data['tempunits'] == 0): # If thermostat is in fahrenheit convert to celcius for domoticz

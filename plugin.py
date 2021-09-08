@@ -175,13 +175,13 @@ class BasePlugin:
 #            humStat = 0 #normal
 
 
-        if (data['tempunits'] == 0): # If thermostat is in fahrenheit convert to celcius for domoticz
-            
-            UpdateDevice(self.heatSetpointUnit,0,str((data['heattemp'] -32)*5/9))
-            UpdateDevice(self.coolSetpointUnit,0,str((data['cooltemp'] -32)*5/9))
-            UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9))
-            UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9)+";"+str(data['hum'])+";"+str(humStat))
-        else:
+#        if (data['tempunits'] == 0): # If thermostat is in fahrenheit convert to celcius for domoticz
+#            
+#            UpdateDevice(self.heatSetpointUnit,0,str((data['heattemp'] -32)*5/9))
+#            UpdateDevice(self.coolSetpointUnit,0,str((data['cooltemp'] -32)*5/9))
+#            UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9))
+#            UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9)+";"+str(data['hum'])+";"+str(humStat))
+#        else:
             
             UpdateDevice(self.heatSetpointUnit,0,str(data['heattemp']))
             UpdateDevice(self.coolSetpointUnit,0,str(data['cooltemp']))

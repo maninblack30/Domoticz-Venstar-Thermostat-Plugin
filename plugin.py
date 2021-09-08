@@ -175,26 +175,26 @@ class BasePlugin:
 #            humStat = 0 #normal
 
 
-#        if (data['tempunits'] == 0): # If thermostat is in fahrenheit convert to celcius for domoticz
-#            
-#            UpdateDevice(self.heatSetpointUnit,0,str((data['heattemp'] -32)*5/9))
-#            UpdateDevice(self.coolSetpointUnit,0,str((data['cooltemp'] -32)*5/9))
-#            UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9))
-#            UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9)+";"+str(data['hum'])+";"+str(humStat))
-#        else:
+        if (data['tempunits'] == 0): # If thermostat is in fahrenheit convert to celcius for domoticz
+            
+            UpdateDevice(self.heatSetpointUnit,0,str((data['heattemp'] -32)*5/9))
+            UpdateDevice(self.coolSetpointUnit,0,str((data['cooltemp'] -32)*5/9))
+            UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9))
+            UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9)+";"+str(data['hum'])+";"+str(humStat))
+        else:
             
             UpdateDevice(self.heatSetpointUnit,0,str(data['heattemp']))
             UpdateDevice(self.coolSetpointUnit,0,str(data['cooltemp']))
             UpdateDevice(self.tempUnit,0,str(data['spacetemp']))
-#            UpdateDevice(self.tempHumUnit,0,str(data['spacetemp'])+";"+str(data['hum'])+";"+str(humStat))
+            UpdateDevice(self.tempHumUnit,0,str(data['spacetemp'])+";"+str(data['hum'])+";"+str(humStat))
 
-#       if humidity control enabled, get hum set point
-#        if(Parameters["Mode2"]):            
-#           UpdateDevice(self.humSetpointUnit,2,str(data['hum_setpoint']) ) #nValue 2 to show percentage
-#           UpdateDevice(self.dehumSetpointUnit,2,str(data['dehum_setpoint']) ) #nValue 2 to show percentage
+       if humidity control enabled, get hum set point
+        if(Parameters["Mode2"]):            
+           UpdateDevice(self.humSetpointUnit,2,str(data['hum_setpoint']) ) #nValue 2 to show percentage
+           UpdateDevice(self.dehumSetpointUnit,2,str(data['dehum_setpoint']) ) #nValue 2 to show percentage
                             
         
-#        UpdateDevice(self.humUnit,data['hum'],"0")
+        UpdateDevice(self.humUnit,data['hum'],"0")
         UpdateDevice(self.scheduleUnit,data['schedule'],"0")
         UpdateDevice(self.awayUnit,data['away'],"0")
         

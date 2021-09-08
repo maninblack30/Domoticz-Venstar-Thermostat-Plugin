@@ -189,12 +189,12 @@ class BasePlugin:
 #            UpdateDevice(self.tempHumUnit,0,str(data['spacetemp'])+";"+str(data['hum'])+";"+str(humStat))
 
 #       if humidity control enabled, get hum set point
-        if(Parameters["Mode2"]):            
-           UpdateDevice(self.humSetpointUnit,2,str(data['hum_setpoint']) ) #nValue 2 to show percentage
-           UpdateDevice(self.dehumSetpointUnit,2,str(data['dehum_setpoint']) ) #nValue 2 to show percentage
+#        if(Parameters["Mode2"]):            
+#           UpdateDevice(self.humSetpointUnit,2,str(data['hum_setpoint']) ) #nValue 2 to show percentage
+#           UpdateDevice(self.dehumSetpointUnit,2,str(data['dehum_setpoint']) ) #nValue 2 to show percentage
                             
         
-        UpdateDevice(self.humUnit,data['hum'],"0")
+#        UpdateDevice(self.humUnit,data['hum'],"0")
         UpdateDevice(self.scheduleUnit,data['schedule'],"0")
         UpdateDevice(self.awayUnit,data['away'],"0")
         

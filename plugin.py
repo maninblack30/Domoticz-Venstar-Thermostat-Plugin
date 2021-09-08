@@ -186,7 +186,7 @@ class BasePlugin:
             UpdateDevice(self.heatSetpointUnit,0,str(data['heattemp']))
             UpdateDevice(self.coolSetpointUnit,0,str(data['cooltemp']))
             UpdateDevice(self.tempUnit,0,str(data['spacetemp']))
-            UpdateDevice(self.tempHumUnit,0,str(data['spacetemp'])+";"+str(data['hum'])+";"+str(humStat))
+#            UpdateDevice(self.tempHumUnit,0,str(data['spacetemp'])+";"+str(data['hum'])+";"+str(humStat))
 
 #       if humidity control enabled, get hum set point
         if(Parameters["Mode2"]):            

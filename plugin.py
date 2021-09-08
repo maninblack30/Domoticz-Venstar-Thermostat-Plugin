@@ -180,7 +180,7 @@ class BasePlugin:
             UpdateDevice(self.heatSetpointUnit,0,str((data['heattemp'] -32)*5/9))
             UpdateDevice(self.coolSetpointUnit,0,str((data['cooltemp'] -32)*5/9))
             UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9))
-            UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9)+";"+str(data['hum'])+";"+str(humStat))
+ #           UpdateDevice(self.tempUnit,0,str((data['spacetemp']-32)*5/9)+";"+str(data['hum'])+";"+str(humStat))
         else:
             
             UpdateDevice(self.heatSetpointUnit,0,str(data['heattemp']))
@@ -269,6 +269,7 @@ class BasePlugin:
             cool_val_to_store = cool_val
             if(domoTempUnits == '1'):
                 cool_val_to_store = (float(cool_val)-32)*5/9
+                
             UpdateDevice(Unit,0,str(cool_val_to_store))
         else:
             cool_val = int(float(Devices[4].sValue)*9/5+32)
